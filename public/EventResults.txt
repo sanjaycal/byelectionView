@@ -1,0 +1,41 @@
+These results were downloaded and refreshed on October   25, 2026 at 2:43 p.m. ET. / Ces résultats ont été téléchargés et rafraichis le 25 octobre 2026 à 14h43 HE.													
+Electoral district number - Numéro de la circonscription	Electoral district name	Nom de la circonscription	Type of results*	Type de résultats**	Surname - Nom de famille	Middle name(s) - Autre(s) prénom(s)	Given name - Prénom	Political affiliation	Appartenance politique	Votes obtained - Votes obtenus	% Votes obtained - Votes obtenus %	Rejected ballots - Bulletins rejetés***	Total number of ballots cast - Nombre total de votes déposés
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	preliminary	préliminaires	Gaudreault		Régis	Conservative	Conservateur	3962	12.5	0	31627
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	preliminary	préliminaires	Dubé		Caroline	Bloc Québécois	Bloc Québécois	10401	32.9	0	31627
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	validated	validés	Émond		Raphaël	NDP-New Democratic Party	NPD-Nouveau Parti démocratique	577	1.8	363	32044
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	preliminary	préliminaires	Émond		Raphaël	NDP-New Democratic Party	NPD-Nouveau Parti démocratique	619	2	0	31627
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	validated	validés	Dubé		Caroline	Bloc Québécois	Bloc Québécois	10397	32.8	363	32044
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	validated	validés	Gaudreault		Régis	Conservative	Conservateur	3985	12.6	363	32044
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	validated	validés	Gobeil		Daniel	Liberal	Libéral	16333	51.6	363	32044
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	validated	validés	Perrone		Nathe	Green Party	Parti Vert	218	.7	363	32044
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	validated	validés	Sabourin		François	People's Party - PPC	Parti populaire - PPC	171	.5	363	32044
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	preliminary	préliminaires	Gobeil		Daniel	Liberal	Libéral	16235	51.3	0	31627
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	preliminary	préliminaires	Perrone		Nathe	Green Party	Parti Vert	221	.7	0	31627
+24018	Chicoutimi--Le Fjord	Chicoutimi--Le Fjord	preliminary	préliminaires	Sabourin		François	People's Party - PPC	Parti populaire - PPC	189	.6	0	31627
+35007	Beaches--East York	Beaches--East York	preliminary	préliminaires	Thomas		Cameron	Canadian Future Party	Parti Avenir Canadien	163	.5	0	32973
+35007	Beaches--East York	Beaches--East York	preliminary	préliminaires	Syrbos		Jim	Conservative	Conservateur	5116	15.5	0	32973
+35007	Beaches--East York	Beaches--East York	preliminary	préliminaires	Shahnawaz		Tanveer	Liberal	Libéral	18361	55.7	0	32973
+35007	Beaches--East York	Beaches--East York	preliminary	préliminaires	Livesey		Bruce	Green Party	Parti Vert	573	1.7	0	32973
+35007	Beaches--East York	Beaches--East York	preliminary	préliminaires	Lachance		Michel	People's Party - PPC	Parti populaire - PPC	248	.8	0	32973
+35007	Beaches--East York	Beaches--East York	preliminary	préliminaires	Devine		Shannon	NDP-New Democratic Party	NPD-Nouveau Parti démocratique	8512	25.8	0	32973
+35007	Beaches--East York	Beaches--East York	validated	validés	Devine		Shannon	NDP-New Democratic Party	NPD-Nouveau Parti démocratique	8496	25.6	111	33248
+35007	Beaches--East York	Beaches--East York	validated	validés	Thomas		Cameron	Canadian Future Party	Parti Avenir Canadien	165	.5	111	33248
+35007	Beaches--East York	Beaches--East York	validated	validés	Syrbos		Jim	Conservative	Conservateur	5142	15.5	111	33248
+35007	Beaches--East York	Beaches--East York	validated	validés	Shahnawaz		Tanveer	Liberal	Libéral	18504	55.8	111	33248
+35007	Beaches--East York	Beaches--East York	validated	validés	Livesey		Bruce	Green Party	Parti Vert	581	1.8	111	33248
+35007	Beaches--East York	Beaches--East York	validated	validés	Lachance		Michel	People's Party - PPC	Parti populaire - PPC	249	.8	111	33248
+59022	North Vancouver--Capilano	North Vancouver--Capilano	preliminary	préliminaires	Arjmand		Ehsan	People's Party - PPC	Parti populaire - PPC	135	.3	0	40654
+59022	North Vancouver--Capilano	North Vancouver--Capilano	preliminary	préliminaires	Caley		Braeden	Liberal	Libéral	23805	58.6	0	40654
+59022	North Vancouver--Capilano	North Vancouver--Capilano	validated	validés	Luce		Shelley	Green Party	Parti Vert	3461	8.6	179	40600
+59022	North Vancouver--Capilano	North Vancouver--Capilano	validated	validés	Monds		Jeff	Independent	Indépendant(e)	55	.1	179	40600
+59022	North Vancouver--Capilano	North Vancouver--Capilano	preliminary	préliminaires	Curran		Stephen	Conservative	Conservateur	11852	29.2	0	40654
+59022	North Vancouver--Capilano	North Vancouver--Capilano	preliminary	préliminaires	Luce		Shelley	Green Party	Parti Vert	3534	8.7	0	40654
+59022	North Vancouver--Capilano	North Vancouver--Capilano	preliminary	préliminaires	Monds		Jeff	Independent	Indépendant(e)	56	.1	0	40654
+59022	North Vancouver--Capilano	North Vancouver--Capilano	preliminary	préliminaires	Tweedale		Stephen	NDP-New Democratic Party	NPD-Nouveau Parti démocratique	1272	3.1	0	40654
+59022	North Vancouver--Capilano	North Vancouver--Capilano	validated	validés	Arjmand		Ehsan	People's Party - PPC	Parti populaire - PPC	133	.3	179	40600
+59022	North Vancouver--Capilano	North Vancouver--Capilano	validated	validés	Caley		Braeden	Liberal	Libéral	23739	58.7	179	40600
+59022	North Vancouver--Capilano	North Vancouver--Capilano	validated	validés	Curran		Stephen	Conservative	Conservateur	11791	29.2	179	40600
+59022	North Vancouver--Capilano	North Vancouver--Capilano	validated	validés	Tweedale		Stephen	NDP-New Democratic Party	NPD-Nouveau Parti démocratique	1242	3.1	179	40600
+*Type of results: preliminary results are unofficial results from election night; validated results are official results validated by each returning officer; judicially certified results are official results validated by a judge following a judicial recount.													
+**Type de résultats : les résultats préliminaires sont les résultats non officiels du soir d'élection; les résultats validés sont les résultats officiels validés par le directeur du scrutin; les résultats de dépouillement judiciaire sont les résultats officiels validés par un juge après un dépouillement judiciaire.													
+***The rejected ballots count is not available for the preliminary results. / Le nombre de bulletins de vote rejetés n'est pas disponible pour les résultats préliminaires.													
