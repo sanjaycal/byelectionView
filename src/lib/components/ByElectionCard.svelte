@@ -230,8 +230,7 @@
     min-width: 0;
   }
 
-  .cname .bar-under,
-  .cname .bar-over {
+  .cname .bar-under {
     overflow: hidden;
     text-overflow: ellipsis;
   }

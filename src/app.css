@@ -69,6 +69,7 @@ body::before {
   top: 0;
   width: var(--visible, 0px);
   overflow: hidden;
+  text-overflow: clip;
   color: var(--on-fill);
   pointer-events: none;
 }
