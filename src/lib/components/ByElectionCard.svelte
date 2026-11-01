@@ -7,6 +7,58 @@
   const previousPct = $derived(
     new Map((previous?.candidates ?? []).map((c) => [c.party, c.pct]))
   )
+
+  const ABBREVIATIONS = {
+    Liberal: 'LPC',
+    Conservative: 'CPC',
+    'NDP-New Democratic Party': 'NDP',
+    'Bloc Québécois': 'BQ',
+    'Green Party': 'GPC',
+    "People's Party - PPC": 'PPC',
+    'Canadian Future Party': 'CFP',
+    Independent: 'IND'
+  }
+
+  function abbreviate(party) {
+    if (ABBREVIATIONS[party]) return ABBREVIATIONS[party]
+    return party
+      .split(/\s+/)
+      .filter((word) => word.length > 2)
+      .map((word) => word[0].toUpperCase())
+      .join('')
+      .slice(0, 4)
+  }
+
+  /**
+   * Swaps the party label for its abbreviation when the full label would not fit
+   * on the same line as the candidate name.
+   */
+  function shortenIfNeeded(node) {
+    const update = () => {
+      const name = node.querySelector('.cname')
+      const party = node.querySelector('.cparty')
+      const full = party?.querySelector('.full')
+      const chip = party?.querySelector('.chip')
+      if (!name || !party || !full || !chip) return
+
+      const gap = parseFloat(getComputedStyle(node).columnGap) || 0
+      const partyGap = parseFloat(getComputedStyle(party).columnGap) || 0
+      const needed = name.scrollWidth + gap + chip.offsetWidth + partyGap + full.offsetWidth
+
+      party.classList.toggle('is-short', needed > node.clientWidth + 1)
+    }
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(node)
+    window.addEventListener('resize', update)
+    document.fonts?.ready.then(update)
+    return {
+      destroy() {
+        observer.disconnect()
+        window.removeEventListener('resize', update)
+      }
+    }
+  }
 </script>
 
 <button class="card" type="button" onclick={() => onopen(riding)}>
@@ -39,11 +91,12 @@
     {#each top as candidate, i (candidate.surname + candidate.party)}
       {@const mark = previousPct.get(candidate.party)}
       <li>
-        <span class="rank">{i + 1}</span>
-        <span class="who">
+        <span class="who" use:shortenIfNeeded>
           <span class="cname">{candidate.name}</span>
           <span class="cparty">
-            <i class="chip" style="background:{partyColor(candidate.party)}"></i>{candidate.party}
+            <i class="chip" style="background:{partyColor(candidate.party)}"></i>
+            <span class="full">{candidate.party}</span>
+            <span class="abbr">{abbreviate(candidate.party)}</span>
           </span>
         </span>
         <span class="votes">{formatNumber(candidate.votes)}</span>
@@ -178,26 +231,21 @@
 
   .candidates li {
     display: grid;
-    grid-template-columns: 1.2rem 1fr auto auto;
+    grid-template-columns: 1fr auto auto;
     grid-template-areas:
-      'rank who votes pct'
-      'bar bar bar bar';
+      'who votes pct'
+      'bar bar bar';
     align-items: center;
-    column-gap: 0.5rem;
-  }
-
-  .rank {
-    grid-area: rank;
-    color: var(--dim);
-    font-size: 1.05rem;
+    column-gap: 0.6rem;
   }
 
   .who {
     grid-area: who;
     display: flex;
-    flex-direction: column;
-    gap: 0.05rem;
+    align-items: baseline;
+    gap: 0.45rem;
     min-width: 0;
+    overflow: hidden;
   }
 
   .cname {
@@ -205,17 +253,38 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 0 1 auto;
+    min-width: 0;
   }
 
   .cparty {
+    position: relative;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.35rem;
     font-size: 0.88rem;
     color: var(--dim);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    flex: 0 0 auto;
+  }
+
+  .cparty .full {
+    flex: none;
+  }
+
+  .cparty .abbr {
+    display: none;
+  }
+
+  .cparty:global(.is-short) .full {
+    position: absolute;
+    left: 0;
+    top: 0;
+    visibility: hidden;
+  }
+
+  .cparty:global(.is-short) .abbr {
+    display: inline;
   }
 
   .chip {
@@ -223,6 +292,7 @@
     width: 0.7rem;
     height: 0.7rem;
     display: inline-block;
+    transform: translateY(0.1rem);
   }
 
   .votes {
