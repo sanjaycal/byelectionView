@@ -12,7 +12,10 @@
 <button class="card" type="button" onclick={() => onopen(riding)}>
   <div class="card-top">
     <h2>{riding.name}</h2>
-    <span class="badge">{riding.type}</span>
+    <div class="tags">
+      <span class="badge">{riding.type}</span>
+      <span class="badge">click for details</span>
+    </div>
   </div>
 
   <dl class="stats">
@@ -24,6 +27,12 @@
       <dt>Ballots cast</dt>
       <dd>{formatNumber(riding.totalBallots)}</dd>
     </div>
+    {#if previous}
+      <div class="legend-item">
+        <dt>Last election</dt>
+        <dd class="legend">2025 general election</dd>
+      </div>
+    {/if}
   </dl>
 
   <ol class="candidates">
@@ -52,13 +61,6 @@
       <li class="more">+{riding.candidates.length - 5} more candidate(s)</li>
     {/if}
   </ol>
-
-  <div class="card-foot">
-    <span>click for details</span>
-    {#if previous}
-      <span class="legend"><span class="tick"></span>2025 general election</span>
-    {/if}
-  </div>
 </button>
 
 <style>
@@ -93,6 +95,14 @@
     padding-bottom: 0.6rem;
   }
 
+  .tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+    flex: none;
+  }
+
   h2 {
     margin: 0;
     font-size: 1.6rem;
@@ -112,15 +122,25 @@
   }
 
   .stats {
-    display: flex;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    grid-template-rows: auto auto;
+    column-gap: 2rem;
+    row-gap: 0.15rem;
+    align-items: end;
     margin: 0;
   }
 
-  .stats div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
+  .stats > div {
+    display: contents;
+  }
+
+  .stats dt {
+    grid-row: 1;
+  }
+
+  .stats dd {
+    grid-row: 2;
   }
 
   dt {
@@ -132,12 +152,22 @@
 
   dd {
     margin: 0;
-    font-size: 1.45rem;
+    font-size: 1.3rem;
     color: var(--text);
   }
 
   dd.na {
     color: var(--dim);
+  }
+
+  dd.legend {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    align-self: start;
+    font-size: 0.88rem;
+    color: var(--dim);
+    white-space: nowrap;
   }
 
   .candidates {
@@ -243,26 +273,6 @@
     padding-top: 0.05rem;
   }
 
-  .card-foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    font-size: 0.82rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--dim);
-    border-top: 1px solid var(--line);
-    padding-top: 0.7rem;
-  }
-
-  .legend {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    letter-spacing: 0.08em;
-  }
-
   .tick {
     display: inline-block;
     width: 3px;
@@ -271,7 +281,4 @@
     opacity: 0.7;
   }
 
-  .card:hover .card-foot {
-    color: var(--accent);
-  }
 </style>
