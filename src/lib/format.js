@@ -31,6 +31,16 @@ export function partyColor(party) {
   return key ? PARTY_COLORS[key] : '#7d8a84'
 }
 
+/** Picks a readable text colour to sit on top of a background colour. */
+export function contrastText(hex) {
+  const value = hex.replace('#', '')
+  const r = parseInt(value.slice(0, 2), 16) / 255
+  const g = parseInt(value.slice(2, 4), 16) / 255
+  const b = parseInt(value.slice(4, 6), 16) / 255
+  const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b
+  return luma > 0.55 ? '#14181a' : '#ffffff'
+}
+
 export function formatNumber(value) {
   if (value == null || Number.isNaN(value)) return '—'
   return Number(value).toLocaleString('en-CA')

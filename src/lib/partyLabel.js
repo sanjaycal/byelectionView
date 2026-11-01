@@ -54,3 +54,40 @@ export function shortenIfNeeded(node) {
     }
   }
 }
+
+/**
+ * Svelte action for bars that carry their own text: marks the bits of text that
+ * sit over the coloured (filled) part of the bar so they can be recoloured.
+ *
+ * The row sets `--pct` (the filled share) and `--party` (the fill colour).
+ */
+export function barContrast(node) {
+  const update = () => {
+    const pct = parseFloat(node.style.getPropertyValue('--pct')) || 0
+    const row = node.getBoundingClientRect()
+    const fillWidth = (row.width * pct) / 100
+
+    node.querySelectorAll('[data-on-bar]').forEach((element) => {
+      const box = element.getBoundingClientRect()
+      const left = box.left - row.left
+      const right = left + box.width
+      const onFill = Math.max(0, Math.min(right, fillWidth) - left)
+      const onTrack = box.width - onFill
+      element.classList.toggle('on-fill', onFill > 0 && onTrack === 0)
+      element.classList.toggle('straddle', onFill > 0 && onTrack > 0)
+    })
+  }
+
+  update()
+  const observer = new ResizeObserver(update)
+  observer.observe(node)
+  window.addEventListener('resize', update)
+  document.fonts?.ready.then(update)
+
+  return {
+    destroy() {
+      observer.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }
+}

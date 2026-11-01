@@ -1,6 +1,6 @@
 <script>
-  import { partyColor, formatNumber, formatPct } from '../format.js'
-  import { abbreviateParty, shortenIfNeeded } from '../partyLabel.js'
+  import { partyColor, contrastText, formatNumber, formatPct } from '../format.js'
+  import { abbreviateParty, barContrast, shortenIfNeeded } from '../partyLabel.js'
 
   let { riding, previous, onopen } = $props()
 
@@ -39,24 +39,28 @@
   <ol class="candidates">
     {#each top as candidate, i (candidate.surname + candidate.party)}
       {@const mark = previousPct.get(candidate.party)}
-      <li>
+      {@const colour = partyColor(candidate.party)}
+      <li
+        class="row"
+        use:barContrast
+        style="--pct:{candidate.pct}%; --party:{colour}; --on-fill:{contrastText(colour)}"
+      >
         <span class="who" use:shortenIfNeeded>
-          <span class="cname">{candidate.name}</span>
-          <span class="cparty">
-            <i class="chip" style="background:{partyColor(candidate.party)}"></i>
+          <span class="cname" data-on-bar>{candidate.name}</span>
+          <span class="cparty" data-on-bar>
             <span class="full">{candidate.party}</span>
             <span class="abbr">{abbreviateParty(candidate.party)}</span>
           </span>
         </span>
-        <span class="votes">{formatNumber(candidate.votes)}</span>
-        <span class="pct">{formatPct(candidate.pct)}</span>
-        <span class="bar">
-          <i style="width:{candidate.pct}%;background:{partyColor(candidate.party)}"></i>
-          {#if mark != null}
-            <span class="marker" style="left:{mark}%" title="2025 general election: {formatPct(mark)}"
-            ></span>
-          {/if}
-        </span>
+        <span class="votes" data-on-bar>{formatNumber(candidate.votes)}</span>
+        <span class="pct" data-on-bar>{formatPct(candidate.pct)}</span>
+        {#if mark != null}
+          <span
+            class="marker"
+            style="left:{mark}%"
+            title="2025 general election: {formatPct(mark)}"
+          ></span>
+        {/if}
       </li>
     {/each}
     {#if riding.candidates.length > 5}
@@ -178,23 +182,37 @@
     flex: 1;
   }
 
-  .candidates li {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    grid-template-areas:
-      'who votes pct'
-      'bar bar bar';
+  .candidates li.row {
+    position: relative;
+    display: flex;
     align-items: center;
-    column-gap: 0.6rem;
+    gap: 0.6rem;
+    min-height: 28px;
+    padding: 0.15rem 0.6rem;
+    overflow: hidden;
+    background: linear-gradient(
+      to right,
+      var(--party) 0 var(--pct),
+      var(--line) var(--pct) 100%
+    );
+  }
+
+  [data-on-bar]:global(.on-fill) {
+    color: var(--on-fill);
+  }
+
+  [data-on-bar]:global(.straddle) {
+    color: var(--text);
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.9);
   }
 
   .who {
-    grid-area: who;
     display: flex;
     align-items: baseline;
     gap: 0.45rem;
     min-width: 0;
     overflow: hidden;
+    flex: 1 1 auto;
   }
 
   .cname {
@@ -237,49 +255,27 @@
     display: inline;
   }
 
-  .chip {
-    flex: none;
-    width: 0.7rem;
-    height: 0.7rem;
-    display: inline-block;
-    transform: translateY(0.1rem);
-  }
-
   .votes {
-    grid-area: votes;
+    flex: none;
     font-size: 1.3rem;
     color: var(--text);
   }
 
   .pct {
-    grid-area: pct;
+    flex: none;
     font-size: 1.3rem;
     color: var(--accent);
     min-width: 4.6rem;
     text-align: right;
   }
 
-  .bar {
-    grid-area: bar;
-    position: relative;
-    display: block;
-    height: 18px;
-    background: var(--line);
-    margin-top: 0.2rem;
-  }
-
-  .bar i {
-    display: block;
-    height: 100%;
-  }
-
   .marker {
     position: absolute;
-    top: -5px;
-    height: 28px;
-    width: 4px;
+    top: 0;
+    height: 8px;
+    width: 3px;
     background: var(--text);
-    opacity: 0.7;
+    opacity: 0.85;
   }
 
   .candidates li.more {

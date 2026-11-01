@@ -1,6 +1,6 @@
 <script>
-  import { partyColor, formatNumber, formatPct, formatDelta } from '../format.js'
-  import { abbreviateParty, shortenIfNeeded } from '../partyLabel.js'
+  import { partyColor, contrastText, formatNumber, formatPct, formatDelta } from '../format.js'
+  import { abbreviateParty, barContrast, shortenIfNeeded } from '../partyLabel.js'
 
   let { riding, previous, onclose } = $props()
 
@@ -47,53 +47,44 @@
         {#if previous}
           <p class="legend"><span class="tick"></span>2025 general election</p>
         {/if}
-        <table>
-          <thead>
-            <tr>
-              <th>Candidate</th>
-              <th class="num">Votes</th>
-              <th class="num">%</th>
-              <th class="num">vs 2025</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each riding.candidates as candidate, i (candidate.surname + candidate.party)}
-              {@const delta = swing(candidate)}
-              {@const mark = previousByParty.get(candidate.party)?.pct}
-              <tr>
-                <td>
-                  <div class="cand" use:shortenIfNeeded>
-                    <span class="cname">{candidate.name}</span>
-                    <span class="cparty">
-                      <i class="chip" style="background:{partyColor(candidate.party)}"></i>
-                      <span class="full">{candidate.party}</span>
-                      <span class="abbr">{abbreviateParty(candidate.party)}</span>
-                    </span>
-                  </div>
-                </td>
-                <td class="num">{formatNumber(candidate.votes)}</td>
-                <td class="num pct">{formatPct(candidate.pct)}</td>
-                <td class="num delta" class:up={delta > 0} class:down={delta < 0}>
-                  {formatDelta(delta)}
-                </td>
-              </tr>
-              <tr class="bar-row">
-                <td colspan="4">
-                  <span class="bar">
-                    <i style="width:{candidate.pct}%;background:{partyColor(candidate.party)}"></i>
-                    {#if mark != null}
-                      <span
-                        class="marker"
-                        style="left:{mark}%"
-                        title="2025 general election: {formatPct(mark)}"
-                      ></span>
-                    {/if}
-                  </span>
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
+        <div class="rows">
+          <div class="head">
+            <span>Candidate</span>
+            <span class="num">Votes</span>
+            <span class="num">%</span>
+            <span class="num">vs 2025</span>
+          </div>
+          {#each riding.candidates as candidate, i (candidate.surname + candidate.party)}
+            {@const delta = swing(candidate)}
+            {@const mark = previousByParty.get(candidate.party)?.pct}
+            {@const colour = partyColor(candidate.party)}
+            <div
+              class="row"
+              use:barContrast
+              style="--pct:{candidate.pct}%; --party:{colour}; --on-fill:{contrastText(colour)}"
+            >
+              <span class="who" use:shortenIfNeeded>
+                <span class="cname" data-on-bar>{candidate.name}</span>
+                <span class="cparty" data-on-bar>
+                  <span class="full">{candidate.party}</span>
+                  <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                </span>
+              </span>
+              <span class="num votes" data-on-bar>{formatNumber(candidate.votes)}</span>
+              <span class="num pct" data-on-bar>{formatPct(candidate.pct)}</span>
+              <span class="num delta" data-on-bar class:up={delta > 0} class:down={delta < 0}>
+                {formatDelta(delta)}
+              </span>
+              {#if mark != null}
+                <span
+                  class="marker"
+                  style="left:{mark}%"
+                  title="2025 general election: {formatPct(mark)}"
+                ></span>
+              {/if}
+            </div>
+          {/each}
+        </div>
         <dl class="foot-stats">
           <div><dt>Ballots cast</dt><dd>{formatNumber(riding.totalBallots)}</dd></div>
           <div><dt>Rejected</dt><dd>{formatNumber(riding.rejected)}</dd></div>
@@ -106,48 +97,39 @@
         <p class="sub">2025 federal general election</p>
         {#if previous}
           <p class="legend"><span class="tick"></span>by-election result</p>
-          <table>
-            <thead>
-              <tr>
-                <th>Candidate</th>
-                <th class="num">Votes</th>
-                <th class="num">%</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each previous.candidates as candidate, i (candidate.surname + candidate.party)}
-                {@const mark = currentByParty.get(candidate.party)?.pct}
-                <tr>
-                  <td>
-                    <div class="cand" use:shortenIfNeeded>
-                      <span class="cname">{candidate.name}</span>
-                      <span class="cparty">
-                        <i class="chip" style="background:{partyColor(candidate.party)}"></i>
-                        <span class="full">{candidate.party}</span>
-                        <span class="abbr">{abbreviateParty(candidate.party)}</span>
-                      </span>
-                    </div>
-                  </td>
-                  <td class="num">{formatNumber(candidate.votes)}</td>
-                  <td class="num pct">{formatPct(candidate.pct)}</td>
-                </tr>
-                <tr class="bar-row">
-                  <td colspan="3">
-                    <span class="bar">
-                      <i style="width:{candidate.pct}%;background:{partyColor(candidate.party)}"></i>
-                      {#if mark != null}
-                        <span
-                          class="marker"
-                          style="left:{mark}%"
-                          title="by-election: {formatPct(mark)}"
-                        ></span>
-                      {/if}
-                    </span>
-                  </td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
+          <div class="rows">
+            <div class="head">
+              <span>Candidate</span>
+              <span class="num">Votes</span>
+              <span class="num">%</span>
+            </div>
+            {#each previous.candidates as candidate, i (candidate.surname + candidate.party)}
+              {@const mark = currentByParty.get(candidate.party)?.pct}
+              {@const colour = partyColor(candidate.party)}
+              <div
+                class="row"
+                use:barContrast
+                style="--pct:{candidate.pct}%; --party:{colour}; --on-fill:{contrastText(colour)}"
+              >
+                <span class="who" use:shortenIfNeeded>
+                  <span class="cname" data-on-bar>{candidate.name}</span>
+                  <span class="cparty" data-on-bar>
+                    <span class="full">{candidate.party}</span>
+                    <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                  </span>
+                </span>
+                <span class="num votes" data-on-bar>{formatNumber(candidate.votes)}</span>
+                <span class="num pct" data-on-bar>{formatPct(candidate.pct)}</span>
+                {#if mark != null}
+                  <span
+                    class="marker"
+                    style="left:{mark}%"
+                    title="by-election: {formatPct(mark)}"
+                  ></span>
+                {/if}
+              </div>
+            {/each}
+          </div>
           <dl class="foot-stats">
             <div><dt>Valid votes</dt><dd>{formatNumber(previous.totalValid)}</dd></div>
             <div><dt>Ballots cast</dt><dd>{formatNumber(previous.ballotsCast)}</dd></div>
@@ -268,64 +250,72 @@
     color: var(--dim);
   }
 
-  table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
+  .rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
-  th.num,
-  td.num {
-    width: 6.5rem;
-  }
-
-  th:last-child,
-  td:last-child {
-    width: 5rem;
-  }
-
-  th {
+  .head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
     font-size: 0.8rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--dim);
-    text-align: left;
-    font-weight: normal;
+    padding: 0 0.6rem 0.5rem;
     border-bottom: 1px solid var(--line);
-    padding: 0 0.4rem 0.4rem 0;
-  }
-
-  td {
-    padding: 0.4rem 0.4rem 0.4rem 0;
-    border-bottom: 1px solid var(--line-soft);
-    font-size: 1.25rem;
-    vertical-align: top;
   }
 
   .num {
     text-align: right;
     white-space: nowrap;
-    min-width: 4.2rem;
+    flex: none;
+    width: 6.5rem;
+  }
+
+  .head .num:last-child,
+  .row .delta {
+    width: 5.5rem;
   }
 
   .pct {
     color: var(--text);
   }
 
-  .cand {
+  .row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 30px;
+    padding: 0.2rem 0.6rem;
+    overflow: hidden;
+    font-size: 1.25rem;
+    background: linear-gradient(
+      to right,
+      var(--party) 0 var(--pct),
+      var(--line) var(--pct) 100%
+    );
+  }
+
+  [data-on-bar]:global(.on-fill) {
+    color: var(--on-fill);
+  }
+
+  [data-on-bar]:global(.straddle) {
+    color: var(--text);
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.9);
+  }
+
+  .who {
     display: flex;
     align-items: baseline;
     gap: 0.45rem;
     min-width: 0;
     overflow: hidden;
-  }
-
-  .chip {
-    width: 0.7rem;
-    height: 0.7rem;
-    flex: none;
-    display: inline-block;
-    transform: translateY(0.1rem);
+    flex: 1 1 auto;
   }
 
   .cname {
@@ -380,30 +370,13 @@
     color: var(--down);
   }
 
-  .bar-row td {
-    border-bottom: 1px solid var(--line-soft);
-    padding: 0 0 0.25rem 0;
-  }
-
-  .bar {
-    position: relative;
-    display: block;
-    height: 18px;
-    background: var(--line);
-  }
-
-  .bar i {
-    display: block;
-    height: 100%;
-  }
-
   .marker {
     position: absolute;
-    top: -4px;
-    height: 26px;
-    width: 4px;
+    top: 0;
+    height: 8px;
+    width: 3px;
     background: var(--text);
-    opacity: 0.7;
+    opacity: 0.85;
   }
 
   .legend {
