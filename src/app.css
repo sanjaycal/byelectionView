@@ -49,6 +49,30 @@ body::before {
   min-height: 100vh;
 }
 
+/* Text that is drawn twice so it can change colour half way along, at the
+   edge of the coloured part of a bar. */
+.bar-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.bar-under,
+.bar-over {
+  display: inline;
+  white-space: nowrap;
+}
+
+.bar-over {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--visible, 0px);
+  overflow: hidden;
+  color: var(--on-fill);
+  pointer-events: none;
+}
+
 ::selection {
   background: var(--accent);
   color: #ffffff;

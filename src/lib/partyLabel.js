@@ -70,11 +70,8 @@ export function barContrast(node) {
     node.querySelectorAll('[data-on-bar]').forEach((element) => {
       const box = element.getBoundingClientRect()
       const left = box.left - row.left
-      const right = left + box.width
-      const onFill = Math.max(0, Math.min(right, fillWidth) - left)
-      const onTrack = box.width - onFill
-      element.classList.toggle('on-fill', onFill > 0 && onTrack === 0)
-      element.classList.toggle('straddle', onFill > 0 && onTrack > 0)
+      const visible = Math.max(0, Math.min(box.width, fillWidth - left))
+      element.style.setProperty('--visible', `${visible}px`)
     })
   }
 

@@ -64,16 +64,32 @@
               style="--pct:{candidate.pct}%; --party:{colour}; --on-fill:{contrastText(colour)}"
             >
               <span class="who" use:shortenIfNeeded>
-                <span class="cname" data-on-bar>{candidate.name}</span>
-                <span class="cparty" data-on-bar>
-                  <span class="full">{candidate.party}</span>
-                  <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                <span class="cname bar-wrap" data-on-bar>
+                  <span class="bar-under">{candidate.name}</span>
+                  <span class="bar-over" aria-hidden="true">{candidate.name}</span>
+                </span>
+                <span class="cparty bar-wrap" data-on-bar>
+                  <span class="bar-under">
+                    <span class="full">{candidate.party}</span>
+                    <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                  </span>
+                  <span class="bar-over" aria-hidden="true">
+                    <span class="full">{candidate.party}</span>
+                    <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                  </span>
                 </span>
               </span>
-              <span class="num votes" data-on-bar>{formatNumber(candidate.votes)}</span>
-              <span class="num pct" data-on-bar>{formatPct(candidate.pct)}</span>
-              <span class="num delta" data-on-bar class:up={delta > 0} class:down={delta < 0}>
-                {formatDelta(delta)}
+              <span class="num votes bar-wrap" data-on-bar>
+                <span class="bar-under">{formatNumber(candidate.votes)}</span>
+                <span class="bar-over" aria-hidden="true">{formatNumber(candidate.votes)}</span>
+              </span>
+              <span class="num pct bar-wrap" data-on-bar>
+                <span class="bar-under">{formatPct(candidate.pct)}</span>
+                <span class="bar-over" aria-hidden="true">{formatPct(candidate.pct)}</span>
+              </span>
+              <span class="num delta bar-wrap" data-on-bar class:up={delta > 0} class:down={delta < 0}>
+                <span class="bar-under">{formatDelta(delta)}</span>
+                <span class="bar-over" aria-hidden="true">{formatDelta(delta)}</span>
               </span>
               {#if mark != null}
                 <span
@@ -112,14 +128,29 @@
                 style="--pct:{candidate.pct}%; --party:{colour}; --on-fill:{contrastText(colour)}"
               >
                 <span class="who" use:shortenIfNeeded>
-                  <span class="cname" data-on-bar>{candidate.name}</span>
-                  <span class="cparty" data-on-bar>
-                    <span class="full">{candidate.party}</span>
-                    <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                  <span class="cname bar-wrap" data-on-bar>
+                    <span class="bar-under">{candidate.name}</span>
+                    <span class="bar-over" aria-hidden="true">{candidate.name}</span>
+                  </span>
+                  <span class="cparty bar-wrap" data-on-bar>
+                    <span class="bar-under">
+                      <span class="full">{candidate.party}</span>
+                      <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                    </span>
+                    <span class="bar-over" aria-hidden="true">
+                      <span class="full">{candidate.party}</span>
+                      <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                    </span>
                   </span>
                 </span>
-                <span class="num votes" data-on-bar>{formatNumber(candidate.votes)}</span>
-                <span class="num pct" data-on-bar>{formatPct(candidate.pct)}</span>
+                <span class="num votes bar-wrap" data-on-bar>
+                  <span class="bar-under">{formatNumber(candidate.votes)}</span>
+                  <span class="bar-over" aria-hidden="true">{formatNumber(candidate.votes)}</span>
+                </span>
+                <span class="num pct bar-wrap" data-on-bar>
+                  <span class="bar-under">{formatPct(candidate.pct)}</span>
+                  <span class="bar-over" aria-hidden="true">{formatPct(candidate.pct)}</span>
+                </span>
                 {#if mark != null}
                   <span
                     class="marker"
@@ -326,16 +357,25 @@
     min-width: 0;
   }
 
+  .cname .bar-under,
+  .cname .bar-over {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .cparty {
-    position: relative;
-    display: flex;
-    align-items: baseline;
-    gap: 0.35rem;
+    display: inline-block;
     font-size: 0.88rem;
     color: var(--dim);
     white-space: nowrap;
     overflow: hidden;
     flex: 0 0 auto;
+    max-width: 100%;
+  }
+
+  .cparty .bar-under,
+  .cparty .bar-over {
+    gap: 0.35rem;
   }
 
   .cparty .full {
@@ -373,10 +413,31 @@
   .marker {
     position: absolute;
     top: 0;
-    height: 8px;
-    width: 3px;
-    background: var(--text);
+    bottom: 0;
+    width: 0;
+    z-index: 1;
+  }
+
+  .marker::before,
+  .marker::after {
+    content: '';
+    position: absolute;
+    left: -5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
     opacity: 0.85;
+  }
+
+  .marker::before {
+    top: 0;
+    border-top: 6px solid var(--text);
+  }
+
+  .marker::after {
+    bottom: 0;
+    border-bottom: 6px solid var(--text);
   }
 
   .legend {
