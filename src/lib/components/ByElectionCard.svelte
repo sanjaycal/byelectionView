@@ -11,7 +11,7 @@
 
 <button class="card" type="button" onclick={() => onopen(riding)}>
   <div class="card-top">
-    <h2>{riding.name}</h2>
+    <h2>{riding.displayName}</h2>
     <div class="tags">
       <span class="badge">{riding.type}</span>
       <span class="badge">click for details</span>

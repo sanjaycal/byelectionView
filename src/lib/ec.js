@@ -137,6 +137,7 @@ export function parseResults(text) {
     out.push({
       id: riding.id,
       name: riding.name,
+      displayName: riding.name.replace(/--/g, '\u2014'),
       nameFr: riding.nameFr,
       type,
       candidates,

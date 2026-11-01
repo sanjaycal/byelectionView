@@ -30,9 +30,9 @@
     if (event.target === event.currentTarget) onclose()
   }}
 >
-  <div class="modal" role="dialog" aria-modal="true" tabindex="-1" aria-label={riding.name}>
+  <div class="modal" role="dialog" aria-modal="true" tabindex="-1" aria-label={riding.displayName}>
     <header>
-      <h2>{riding.name}</h2>
+      <h2>{riding.displayName}</h2>
       <div class="meta">
         <span class="tag">{riding.type}</span>
       </div>
