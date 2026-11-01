@@ -69,7 +69,9 @@
     flex-direction: column;
     gap: 1rem;
     width: 100%;
+    min-width: 0;
     height: 100%;
+    overflow: hidden;
     padding: 1.25rem;
     text-align: left;
     font: inherit;
@@ -109,6 +111,8 @@
     letter-spacing: 0.04em;
     line-height: 1.25;
     text-transform: uppercase;
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
 
   .badge {
@@ -122,25 +126,18 @@
   }
 
   .stats {
-    display: grid;
-    grid-template-columns: repeat(3, max-content);
-    grid-template-rows: auto auto;
-    column-gap: 2rem;
-    row-gap: 0.15rem;
-    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.15rem 2rem;
     margin: 0;
   }
 
   .stats > div {
-    display: contents;
-  }
-
-  .stats dt {
-    grid-row: 1;
-  }
-
-  .stats dd {
-    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
   }
 
   dt {
@@ -164,7 +161,6 @@
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    align-self: start;
     font-size: 0.88rem;
     color: var(--dim);
     white-space: nowrap;
