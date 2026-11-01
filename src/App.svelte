@@ -196,7 +196,7 @@
   {#if ridings.length}
     <div class="grid">
       {#each ridings as riding (riding.id)}
-        <ByElectionCard {riding} onopen={(r) => (selected = r)} />
+        <ByElectionCard {riding} previous={previousFor(riding.name)} onopen={(r) => (selected = r)} />
       {/each}
     </div>
   {:else if status === 'error'}

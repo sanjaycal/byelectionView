@@ -1,9 +1,12 @@
 <script>
   import { partyColor, formatNumber, formatPct } from '../format.js'
 
-  let { riding, onopen } = $props()
+  let { riding, previous, onopen } = $props()
 
   const top = $derived(riding.candidates.slice(0, 5))
+  const previousPct = $derived(
+    new Map((previous?.candidates ?? []).map((c) => [c.party, c.pct]))
+  )
 </script>
 
 <button class="card" type="button" onclick={() => onopen(riding)}>
@@ -25,6 +28,7 @@
 
   <ol class="candidates">
     {#each top as candidate, i (candidate.surname + candidate.party)}
+      {@const mark = previousPct.get(candidate.party)}
       <li>
         <span class="rank">{i + 1}</span>
         <span class="who">
@@ -35,7 +39,13 @@
         </span>
         <span class="votes">{formatNumber(candidate.votes)}</span>
         <span class="pct">{formatPct(candidate.pct)}</span>
-        <span class="bar"><i style="width:{candidate.pct}%"></i></span>
+        <span class="bar">
+          <i style="width:{candidate.pct}%;background:{partyColor(candidate.party)}"></i>
+          {#if mark != null}
+            <span class="marker" style="left:{mark}%" title="2025 general election: {formatPct(mark)}"
+            ></span>
+          {/if}
+        </span>
       </li>
     {/each}
     {#if riding.candidates.length > 5}
@@ -43,7 +53,12 @@
     {/if}
   </ol>
 
-  <div class="card-foot">click for details</div>
+  <div class="card-foot">
+    <span>click for details</span>
+    {#if previous}
+      <span class="legend"><span class="tick"></span>2025 general election</span>
+    {/if}
+  </div>
 </button>
 
 <style>
@@ -200,8 +215,9 @@
 
   .bar {
     grid-area: bar;
+    position: relative;
     display: block;
-    height: 3px;
+    height: 4px;
     background: var(--line);
     margin-top: 0.15rem;
   }
@@ -209,7 +225,15 @@
   .bar i {
     display: block;
     height: 100%;
-    background: var(--accent-soft);
+  }
+
+  .marker {
+    position: absolute;
+    top: -3px;
+    height: 10px;
+    width: 2px;
+    background: var(--text);
+    opacity: 0.7;
   }
 
   .candidates li.more {
@@ -220,12 +244,31 @@
   }
 
   .card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
     font-size: 0.6rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--dim);
     border-top: 1px solid var(--line);
     padding-top: 0.5rem;
+  }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    letter-spacing: 0.08em;
+  }
+
+  .tick {
+    display: inline-block;
+    width: 2px;
+    height: 9px;
+    background: var(--text);
+    opacity: 0.7;
   }
 
   .card:hover .card-foot {

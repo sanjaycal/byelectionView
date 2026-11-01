@@ -31,9 +31,7 @@
     <header>
       <h2>{riding.name}</h2>
       <div class="meta">
-        <span class="tag">district {riding.id}</span>
         <span class="tag">{riding.type}</span>
-        <span class="tag">{formatNumber(riding.totalBallots)} ballots</span>
       </div>
       <button class="close" type="button" onclick={onclose} aria-label="Close">X</button>
     </header>
@@ -42,6 +40,9 @@
       <section class="col">
         <h3>Current results</h3>
         <p class="sub">by-election &mdash; {riding.type}</p>
+        {#if previous}
+          <p class="legend"><span class="tick"></span>2025 general election</p>
+        {/if}
         <table>
           <thead>
             <tr>
@@ -54,6 +55,7 @@
           <tbody>
             {#each riding.candidates as candidate, i (candidate.surname + candidate.party)}
               {@const delta = swing(candidate)}
+              {@const mark = previousByParty.get(candidate.party)?.pct}
               <tr>
                 <td>
                   <div class="cand">
@@ -67,6 +69,20 @@
                 <td class="num pct">{formatPct(candidate.pct)}</td>
                 <td class="num delta" class:up={delta > 0} class:down={delta < 0}>
                   {formatDelta(delta)}
+                </td>
+              </tr>
+              <tr class="bar-row">
+                <td colspan="4">
+                  <span class="bar">
+                    <i style="width:{candidate.pct}%;background:{partyColor(candidate.party)}"></i>
+                    {#if mark != null}
+                      <span
+                        class="marker"
+                        style="left:{mark}%"
+                        title="2025 general election: {formatPct(mark)}"
+                      ></span>
+                    {/if}
+                  </span>
                 </td>
               </tr>
             {/each}
@@ -120,11 +136,6 @@
         {:else}
           <p class="empty">No 2025 results on file for this riding.</p>
         {/if}
-      </section>
-
-      <section class="col reserved">
-        <h3>Reserved</h3>
-        <p class="sub"></p>
       </section>
     </div>
   </div>
@@ -202,7 +213,7 @@
 
   .columns {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 2fr 1fr;
   }
 
   .col {
@@ -307,6 +318,51 @@
     color: var(--down);
   }
 
+  .bar-row td {
+    border-bottom: 1px solid var(--line-soft);
+    padding: 0 0 0.45rem 0;
+  }
+
+  .bar {
+    position: relative;
+    display: block;
+    height: 4px;
+    background: var(--line);
+  }
+
+  .bar i {
+    display: block;
+    height: 100%;
+  }
+
+  .marker {
+    position: absolute;
+    top: -3px;
+    height: 10px;
+    width: 2px;
+    background: var(--text);
+    opacity: 0.7;
+  }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-top: 0.6rem;
+  }
+
+  .legend .tick {
+    display: inline-block;
+    width: 2px;
+    height: 9px;
+    background: var(--text);
+    opacity: 0.7;
+  }
+
   .foot-stats {
     display: flex;
     flex-wrap: wrap;
@@ -335,16 +391,6 @@
   .empty {
     color: var(--dim);
     font-size: 0.8rem;
-  }
-
-  .reserved {
-    background: repeating-linear-gradient(
-      135deg,
-      transparent,
-      transparent 9px,
-      var(--line-soft) 9px,
-      var(--line-soft) 10px
-    );
   }
 
   @media (max-width: 900px) {
