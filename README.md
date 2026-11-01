@@ -2,9 +2,15 @@
 
 Client-only Svelte dashboard that polls the Elections Canada results download
 (`https://enr.elections.ca/DownloadResults.aspx`) every 10 seconds and shows one
-card per by-election in a 3x2 grid. Clicking a card opens a modal with three
-columns: current by-election results, previous (2025 general election) results,
-and an empty reserved column.
+card per by-election in a grid (3 across on wide screens, 2 then 1 as the
+viewport narrows). Clicking a card opens a modal with the current by-election
+results on the left two thirds and the previous (2025 general election) results
+on the right third.
+
+Each candidate row carries a bar in the party's colour with a tick marking where
+that party stood in the 2025 general election, so the shift is visible at a
+glance. In the modal the previous results column mirrors it, with the tick
+marking the by-election result instead.
 
 ## Run
 
@@ -38,6 +44,7 @@ without hitting the network.
 - The download file has no poll counts, so the **Polls reporting** field shows
   `N/A`. Ballots cast is shown instead because it is in the file.
 - Cards list the top 5 candidates (all of them when there are fewer).
+- The grid drops to 2 columns below 1500px and 1 column below 900px.
 - The middle modal column uses the 2025 general election result for the riding.
   Those figures live in `src/data/previous-results-2025.json` and are generated
   with:

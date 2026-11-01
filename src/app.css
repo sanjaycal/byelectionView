@@ -5,7 +5,7 @@
   --line: #dcd9cf;
   --line-soft: #ebe8e0;
   --text: #1b211d;
-  --dim: #707c74;
+  --dim: #63706a;
   --accent: #0b7a3d;
   --accent-dim: #9ec9ae;
   --accent-soft: #d6ecdd;
@@ -37,8 +37,8 @@ body::before {
   z-index: 0;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.025) 0px,
-    rgba(0, 0, 0, 0.025) 1px,
+    rgba(0, 0, 0, 0.015) 0px,
+    rgba(0, 0, 0, 0.015) 1px,
     transparent 1px,
     transparent 3px
   );

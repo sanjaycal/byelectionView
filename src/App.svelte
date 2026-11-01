@@ -217,14 +217,14 @@
     justify-content: space-between;
     gap: 1.5rem;
     flex-wrap: wrap;
-    padding: 1rem 1.25rem;
+    padding: 0.7rem 1.25rem;
     border-bottom: 1px solid var(--line);
     background: var(--panel);
   }
 
   h1 {
     margin: 0;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--accent);
@@ -232,7 +232,7 @@
 
   .brand p {
     margin: 0.2rem 0 0;
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--dim);
@@ -243,7 +243,7 @@
     align-items: center;
     gap: 0.75rem;
     flex-wrap: wrap;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
   }
 
   .dot {
@@ -268,7 +268,7 @@
 
   .gear {
     font: inherit;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--dim);
@@ -300,7 +300,7 @@
   }
 
   .settings span {
-    font-size: 0.58rem;
+    font-size: 0.72rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--dim);
@@ -309,7 +309,7 @@
   input,
   select {
     font: inherit;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     color: var(--text);
     background: var(--bg);
     border: 1px solid var(--line);
@@ -323,7 +323,7 @@
 
   .settings button {
     font: inherit;
-    font-size: 0.68rem;
+    font-size: 0.85rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--accent);
@@ -336,34 +336,34 @@
   .hint {
     margin: 0;
     flex: 1 1 100%;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     color: var(--dim);
   }
 
   main {
-    padding: 1.25rem;
+    padding: 0.9rem;
   }
 
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 0.7rem;
     align-items: stretch;
   }
 
   .empty {
     color: var(--dim);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     padding: 2rem 0;
   }
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1500px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
     .grid {
       grid-template-columns: 1fr;
     }

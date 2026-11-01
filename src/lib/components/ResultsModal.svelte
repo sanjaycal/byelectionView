@@ -6,6 +6,9 @@
   const previousByParty = $derived(
     new Map((previous?.candidates ?? []).map((c) => [c.party, c]))
   )
+  const currentByParty = $derived(
+    new Map(riding.candidates.map((c) => [c.party, c]))
+  )
 
   function swing(candidate) {
     const before = previousByParty.get(candidate.party)
@@ -99,6 +102,7 @@
         <h3>Previous results</h3>
         <p class="sub">2025 federal general election</p>
         {#if previous}
+          <p class="legend"><span class="tick"></span>by-election result</p>
           <table>
             <thead>
               <tr>
@@ -110,6 +114,7 @@
             </thead>
             <tbody>
               {#each previous.candidates as candidate, i (candidate.surname + candidate.party)}
+                {@const mark = currentByParty.get(candidate.party)?.pct}
                 <tr>
                   <td>
                     <div class="cand">
@@ -122,6 +127,20 @@
                   <td class="num">{formatNumber(candidate.votes)}</td>
                   <td class="num pct">{formatPct(candidate.pct)}</td>
                   <td class="num delta"></td>
+                </tr>
+                <tr class="bar-row">
+                  <td colspan="4">
+                    <span class="bar">
+                      <i style="width:{candidate.pct}%;background:{partyColor(candidate.party)}"></i>
+                      {#if mark != null}
+                        <span
+                          class="marker"
+                          style="left:{mark}%"
+                          title="by-election: {formatPct(mark)}"
+                        ></span>
+                      {/if}
+                    </span>
+                  </td>
                 </tr>
               {/each}
             </tbody>
@@ -154,7 +173,7 @@
   }
 
   .modal {
-    width: min(1200px, 100%);
+    width: min(1500px, 100%);
     max-height: 90vh;
     overflow: auto;
     background: var(--bg);
@@ -166,7 +185,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.9rem 1.1rem;
+    padding: 0.75rem 1.2rem;
     border-bottom: 1px solid var(--line);
     background: var(--panel);
     position: sticky;
@@ -175,7 +194,7 @@
 
   header h2 {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.3rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
@@ -188,7 +207,7 @@
   }
 
   .tag {
-    font-size: 0.62rem;
+    font-size: 0.78rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--dim);
@@ -198,11 +217,11 @@
 
   .close {
     font: inherit;
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--text);
     background: transparent;
     border: 1px solid var(--line);
-    padding: 0.1rem 0.55rem;
+    padding: 0.1rem 0.6rem;
     cursor: pointer;
   }
 
@@ -217,7 +236,7 @@
   }
 
   .col {
-    padding: 1rem 1.1rem 1.4rem;
+    padding: 0.95rem 1.1rem 1.2rem;
     border-right: 1px solid var(--line);
     min-width: 0;
   }
@@ -228,7 +247,7 @@
 
   .col h3 {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: 1.25rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
@@ -236,7 +255,7 @@
 
   .sub {
     margin: 0.2rem 0 0.9rem;
-    font-size: 0.65rem;
+    font-size: 0.82rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--dim);
@@ -248,26 +267,27 @@
   }
 
   th {
-    font-size: 0.58rem;
+    font-size: 0.8rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--dim);
     text-align: left;
     font-weight: normal;
     border-bottom: 1px solid var(--line);
-    padding: 0 0.35rem 0.4rem 0;
+    padding: 0 0.4rem 0.4rem 0;
   }
 
   td {
-    padding: 0.45rem 0.35rem 0.45rem 0;
+    padding: 0.4rem 0.4rem 0.4rem 0;
     border-bottom: 1px solid var(--line-soft);
-    font-size: 0.85rem;
+    font-size: 1.25rem;
     vertical-align: top;
   }
 
   .num {
     text-align: right;
     white-space: nowrap;
+    min-width: 4.2rem;
   }
 
   .pct {
@@ -282,32 +302,30 @@
 
   .rank {
     color: var(--dim);
-    font-size: 0.7rem;
-    min-width: 0.9rem;
+    font-size: 1rem;
+    min-width: 1.4rem;
   }
 
   .chip {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.7rem;
+    height: 0.7rem;
     flex: none;
     display: inline-block;
   }
 
   .cname {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: break-word;
   }
 
   .party {
     color: var(--dim);
-    font-size: 0.62rem;
-    padding-left: 1.25rem;
+    font-size: 0.88rem;
+    padding-left: 1.75rem;
   }
 
   .delta {
     color: var(--dim);
-    font-size: 0.72rem;
+    font-size: 1rem;
   }
 
   .delta.up {
@@ -320,13 +338,13 @@
 
   .bar-row td {
     border-bottom: 1px solid var(--line-soft);
-    padding: 0 0 0.45rem 0;
+    padding: 0 0 0.25rem 0;
   }
 
   .bar {
     position: relative;
     display: block;
-    height: 4px;
+    height: 18px;
     background: var(--line);
   }
 
@@ -337,9 +355,9 @@
 
   .marker {
     position: absolute;
-    top: -3px;
-    height: 10px;
-    width: 2px;
+    top: -4px;
+    height: 26px;
+    width: 4px;
     background: var(--text);
     opacity: 0.7;
   }
@@ -348,7 +366,7 @@
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 0.58rem;
+    font-size: 0.82rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--dim);
@@ -357,8 +375,8 @@
 
   .legend .tick {
     display: inline-block;
-    width: 2px;
-    height: 9px;
+    width: 3px;
+    height: 15px;
     background: var(--text);
     opacity: 0.7;
   }
@@ -366,8 +384,8 @@
   .foot-stats {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.5rem;
-    margin: 1rem 0 0;
+    gap: 0.35rem 1.4rem;
+    margin: 0.8rem 0 0;
   }
 
   .foot-stats div {
@@ -377,7 +395,7 @@
   }
 
   dt {
-    font-size: 0.58rem;
+    font-size: 0.78rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--dim);
@@ -385,15 +403,15 @@
 
   dd {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: 1.15rem;
   }
 
   .empty {
     color: var(--dim);
-    font-size: 0.8rem;
+    font-size: 1.1rem;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1000px) {
     .columns {
       grid-template-columns: 1fr;
     }
