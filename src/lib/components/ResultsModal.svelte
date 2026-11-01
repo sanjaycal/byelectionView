@@ -1,5 +1,6 @@
 <script>
   import { partyColor, formatNumber, formatPct, formatDelta } from '../format.js'
+  import { abbreviateParty, shortenIfNeeded } from '../partyLabel.js'
 
   let { riding, previous, onclose } = $props()
 
@@ -61,12 +62,14 @@
               {@const mark = previousByParty.get(candidate.party)?.pct}
               <tr>
                 <td>
-                  <div class="cand">
-                    <span class="rank">{i + 1}</span>
-                    <span class="chip" style="background:{partyColor(candidate.party)}"></span>
+                  <div class="cand" use:shortenIfNeeded>
                     <span class="cname">{candidate.name}</span>
+                    <span class="cparty">
+                      <i class="chip" style="background:{partyColor(candidate.party)}"></i>
+                      <span class="full">{candidate.party}</span>
+                      <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                    </span>
                   </div>
-                  <div class="party">{candidate.party}</div>
                 </td>
                 <td class="num">{formatNumber(candidate.votes)}</td>
                 <td class="num pct">{formatPct(candidate.pct)}</td>
@@ -109,7 +112,6 @@
                 <th>Candidate</th>
                 <th class="num">Votes</th>
                 <th class="num">%</th>
-                <th class="num"></th>
               </tr>
             </thead>
             <tbody>
@@ -117,19 +119,20 @@
                 {@const mark = currentByParty.get(candidate.party)?.pct}
                 <tr>
                   <td>
-                    <div class="cand">
-                      <span class="rank">{i + 1}</span>
-                      <span class="chip" style="background:{partyColor(candidate.party)}"></span>
+                    <div class="cand" use:shortenIfNeeded>
                       <span class="cname">{candidate.name}</span>
+                      <span class="cparty">
+                        <i class="chip" style="background:{partyColor(candidate.party)}"></i>
+                        <span class="full">{candidate.party}</span>
+                        <span class="abbr">{abbreviateParty(candidate.party)}</span>
+                      </span>
                     </div>
-                    <div class="party">{candidate.party}</div>
                   </td>
                   <td class="num">{formatNumber(candidate.votes)}</td>
                   <td class="num pct">{formatPct(candidate.pct)}</td>
-                  <td class="num delta"></td>
                 </tr>
                 <tr class="bar-row">
-                  <td colspan="4">
+                  <td colspan="3">
                     <span class="bar">
                       <i style="width:{candidate.pct}%;background:{partyColor(candidate.party)}"></i>
                       {#if mark != null}
@@ -245,6 +248,10 @@
     border-right: none;
   }
 
+  .col:last-child {
+    border-right: none;
+  }
+
   .col h3 {
     margin: 0;
     font-size: 1.25rem;
@@ -263,7 +270,18 @@
 
   table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
+  }
+
+  th.num,
+  td.num {
+    width: 6.5rem;
+  }
+
+  th:last-child,
+  td:last-child {
+    width: 5rem;
   }
 
   th {
@@ -296,14 +314,10 @@
 
   .cand {
     display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .rank {
-    color: var(--dim);
-    font-size: 1rem;
-    min-width: 1.4rem;
+    align-items: baseline;
+    gap: 0.45rem;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .chip {
@@ -311,16 +325,46 @@
     height: 0.7rem;
     flex: none;
     display: inline-block;
+    transform: translateY(0.1rem);
   }
 
   .cname {
-    overflow-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 0 1 auto;
+    min-width: 0;
   }
 
-  .party {
-    color: var(--dim);
+  .cparty {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
     font-size: 0.88rem;
-    padding-left: 1.75rem;
+    color: var(--dim);
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+
+  .cparty .full {
+    flex: none;
+  }
+
+  .cparty .abbr {
+    display: none;
+  }
+
+  .cparty:global(.is-short) .full {
+    position: absolute;
+    left: 0;
+    top: 0;
+    visibility: hidden;
+  }
+
+  .cparty:global(.is-short) .abbr {
+    display: inline;
   }
 
   .delta {

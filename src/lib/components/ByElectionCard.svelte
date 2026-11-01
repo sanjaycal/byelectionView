@@ -1,5 +1,6 @@
 <script>
   import { partyColor, formatNumber, formatPct } from '../format.js'
+  import { abbreviateParty, shortenIfNeeded } from '../partyLabel.js'
 
   let { riding, previous, onopen } = $props()
 
@@ -7,58 +8,6 @@
   const previousPct = $derived(
     new Map((previous?.candidates ?? []).map((c) => [c.party, c.pct]))
   )
-
-  const ABBREVIATIONS = {
-    Liberal: 'LPC',
-    Conservative: 'CPC',
-    'NDP-New Democratic Party': 'NDP',
-    'Bloc Québécois': 'BQ',
-    'Green Party': 'GPC',
-    "People's Party - PPC": 'PPC',
-    'Canadian Future Party': 'CFP',
-    Independent: 'IND'
-  }
-
-  function abbreviate(party) {
-    if (ABBREVIATIONS[party]) return ABBREVIATIONS[party]
-    return party
-      .split(/\s+/)
-      .filter((word) => word.length > 2)
-      .map((word) => word[0].toUpperCase())
-      .join('')
-      .slice(0, 4)
-  }
-
-  /**
-   * Swaps the party label for its abbreviation when the full label would not fit
-   * on the same line as the candidate name.
-   */
-  function shortenIfNeeded(node) {
-    const update = () => {
-      const name = node.querySelector('.cname')
-      const party = node.querySelector('.cparty')
-      const full = party?.querySelector('.full')
-      const chip = party?.querySelector('.chip')
-      if (!name || !party || !full || !chip) return
-
-      const gap = parseFloat(getComputedStyle(node).columnGap) || 0
-      const partyGap = parseFloat(getComputedStyle(party).columnGap) || 0
-      const needed = name.scrollWidth + gap + chip.offsetWidth + partyGap + full.offsetWidth
-
-      party.classList.toggle('is-short', needed > node.clientWidth + 1)
-    }
-    update()
-    const observer = new ResizeObserver(update)
-    observer.observe(node)
-    window.addEventListener('resize', update)
-    document.fonts?.ready.then(update)
-    return {
-      destroy() {
-        observer.disconnect()
-        window.removeEventListener('resize', update)
-      }
-    }
-  }
 </script>
 
 <button class="card" type="button" onclick={() => onopen(riding)}>
@@ -96,7 +45,7 @@
           <span class="cparty">
             <i class="chip" style="background:{partyColor(candidate.party)}"></i>
             <span class="full">{candidate.party}</span>
-            <span class="abbr">{abbreviate(candidate.party)}</span>
+            <span class="abbr">{abbreviateParty(candidate.party)}</span>
           </span>
         </span>
         <span class="votes">{formatNumber(candidate.votes)}</span>
@@ -265,6 +214,7 @@
     font-size: 0.88rem;
     color: var(--dim);
     white-space: nowrap;
+    overflow: hidden;
     flex: 0 0 auto;
   }
 
