@@ -23,13 +23,16 @@ empty rather than padded out.
 
 **Card.** Riding name, `POLLS REPORTING`, `BALLOTS CAST` and `LAST ELECTION`,
 then the top five candidates (all of them when there are fewer) with their votes
-and share. Every candidate has a bar in the party's colour and a tick marking
-where that party stood in the 2025 general election, so a swing is visible at a
-glance.
+and share. Each candidate row *is* the bar: the row is filled to the
+candidate's share in the party's colour and the candidate's name sits inside
+it, changing colour exactly at the edge of the fill. The party label sits next
+to the name and is abbreviated when the full one will not fit. A pair of
+triangles marks where that party stood in the 2025 general election, so a swing
+is visible at a glance.
 
-**Modal.** Current by-election results on the left two thirds, 2025 general
-election results on the right third. The previous column mirrors the current
-one, with the tick marking the by-election result instead.
+**Modal.** Current by-election results on the left, 2025 general election
+results on the right. The previous column mirrors the current one, with the
+triangles marking the by-election result instead.
 
 ## How the data is fetched
 
@@ -75,16 +78,18 @@ without hitting the network.
 
 ## Branches
 
-`master` is the stable view. Two experiment branches build on it:
+`master` is the stable view. Two experiment branches were built on it and have
+since been merged into it:
 
 | Branch | What it changes |
 | --- | --- |
-| `master` | Stable layout: rank numbers, party chip under the name, a separate bar under each candidate row. |
-| `experiment/cards-cleanup` | Drops the rank numbers, moves the party chip next to the candidate name, and abbreviates the party name per row (`NDP-New Democratic Party` → `NDP`) when the full label will not fit on the line. Applied to the card and the modal. |
-| `experiment/bar-text` | The candidate row *is* the bar: the text sits inside the coloured bar and changes colour exactly at the edge of the fill, and the 2025 marker became a pair of triangles. Applied to the card and the modal. The modal's tables become flex rows and the column split becomes 3fr 2fr. |
+| `master` | The candidate row *is* the bar: the text sits inside the coloured bar and changes colour exactly at the edge of the fill. No rank numbers, the party label sits next to the candidate name and is abbreviated per row when it will not fit, and the 2025 marker is a pair of triangles. Applied to the card and the modal. |
+| `experiment/cards-cleanup` | Dropped the rank numbers, moved the party chip next to the candidate name, and abbreviated the party name per row (`NDP-New Democratic Party` → `NDP`) when the full label will not fit on the line. Applied to the card and the modal. Merged into `master`. |
+| `experiment/bar-text` | The candidate row became the bar, with the text splitting colour at the fill edge. The modal's tables became flex rows and the column split became 3fr 2fr. Merged into `master`. |
 
-`experiment/bar-text` builds on `experiment/cards-cleanup`, which builds on
-`master`. See `AGENTS.md` for the implementation notes and the gotchas that
+`experiment/bar-text` was stacked on `experiment/cards-cleanup`, which was
+stacked on `master`, so merging the top of the stack brought the whole stack
+with it. See `AGENTS.md` for the implementation notes and the gotchas that
 came out of building these.
 
 ## Project layout

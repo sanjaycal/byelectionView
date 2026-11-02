@@ -322,13 +322,4 @@
     font-size: 0.95rem;
     padding-top: 0.05rem;
   }
-
-  .tick {
-    display: inline-block;
-    width: 3px;
-    height: 15px;
-    background: var(--text);
-    opacity: 0.7;
-  }
-
 </style>

@@ -67,8 +67,7 @@ These cost real time; check them before assuming the CSS is broken.
   build a reusable `<BarText>` component left the party labels unstyled,
   because the parent's `.cparty` rules never matched the element the child
   rendered. Shared markup now lives in the parent, and the shared helper
-  classes (`.bar-wrap`, `.bar-under`, `.bar-over`, on `experiment/bar-text`)
-  are global in `app.css`.
+  classes (`.bar-wrap`, `.bar-under`, `.bar-over`) are global in `app.css`.
 - **`text-overflow: ellipsis` only works when the text is a direct inline
   child of the clipped box.** Wrapping the text in an `inline-flex` child
   silently loses the ellipsis. Keep the text inline.
@@ -85,12 +84,12 @@ These cost real time; check them before assuming the CSS is broken.
   with a devtools panel docked). The fix was `min-width: 0` on the card,
   `overflow-wrap: anywhere` on the riding title, and a stats row that wraps.
   If a new column is added, give it the same treatment.
-- **Tables size their columns to their content.** On `master` the modal's
-  tables use `table-layout: fixed` with sized numeric columns, because a long
-  candidate name used to push the votes column off the edge of the modal. On
-  `experiment/bar-text` the tables were replaced with flex rows entirely.
+- **Tables size their columns to their content.** The modal's rows used to be
+  tables with `table-layout: fixed` and sized numeric columns, because a long
+  candidate name used to push the votes column off the edge of the modal. They
+  are flex rows now, and the numeric columns have fixed widths instead.
 
-## The bar-with-text technique (experiment/bar-text)
+## The bar-with-text technique
 
 Each candidate row is the bar: the row's background is a gradient that fills to
 the candidate's share, and the text sits on top of it.
@@ -111,16 +110,28 @@ The contrast colour is chosen per party by `contrastText()` in `format.js`:
 white on the red, blue and green fills, near-black on orange, where white is
 unreadable. That means the split is invisible on orange rows.
 
-## Party abbreviations (experiment branches)
+## Party abbreviations
 
-On the experiment branches the party label is shortened per row when the full
-one will not fit next to the candidate name. `abbreviateParty()` maps the long
-labels to the short ones (`NDP-New Democratic Party` → `NDP`, `Liberal` →
-`LPC`, and so on), falling back to initials for anything unknown, and
-`shortenIfNeeded()` decides per row whether to swap it in. Both live in
-`src/lib/partyLabel.js` and are shared by the card and the modal.
+The party label is shortened per row when the full one will not fit next to the
+candidate name. `abbreviateParty()` maps the long labels to the short ones
+(`NDP-New Democratic Party` → `NDP`, `Liberal` → `LPC`, and so on), falling
+back to initials for anything unknown, and `shortenIfNeeded()` decides per row
+whether to swap it in. Both live in `src/lib/partyLabel.js` and are shared by
+the card and the modal.
 
-`master` still shows the full party label under the candidate name.
+Measuring that is fiddly, because the name is clipped with an ellipsis:
+
+- **The name's width has to come from `scrollWidth`, not `clientWidth`.**
+  `clientWidth` is the width the text was squeezed into, which is exactly the
+  thing being tested.
+- **The hidden full label keeps `width: max-content`.** It is taken out of the
+  flow with `position: absolute` when the row is short, and without that the
+  absolute box gets clamped to the width of the abbreviation that replaced it.
+  The measurement then reads the short width, the row decides it fits, and the
+  label flips back and forth.
+- **The row's width changes when the label is swapped**, which moves the label
+  along the bar, so `barContrast()` watches for class changes with a
+  `MutationObserver` and measures the fill edge again.
 
 ## Verifying a change
 
@@ -145,7 +156,7 @@ they must be equal.
 
 ## Branch workflow
 
-`master` is the stable view and the two `experiment/*` branches are the
+`master` is the stable view and the `experiment/*` branches are the
 playground. When an experiment is done, `master` moves on and the experiment is
 rebased onto it:
 
@@ -155,9 +166,10 @@ git checkout experiment/bar-text
 git rebase master                          # replay the experiment on top
 ```
 
-`experiment/bar-text` is stacked on `experiment/cards-cleanup`, which is stacked
-on `master`, so a rebase has to go through the stack in order. Nothing is
-pushed to `origin` unless it is asked for.
+An experiment that is good enough to ship is merged into `master` instead
+(`git merge --ff-only experiment/bar-text`), which brings the whole stack with
+it — `experiment/bar-text` was stacked on `experiment/cards-cleanup`, which was
+stacked on `master`. Nothing is pushed to `origin` unless it is asked for.
 
 ## Conventions
 
