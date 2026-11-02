@@ -262,6 +262,7 @@
     position: absolute;
     left: 0;
     top: 0;
+    width: max-content;
     visibility: hidden;
   }
 

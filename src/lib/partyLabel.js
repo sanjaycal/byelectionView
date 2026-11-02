@@ -24,20 +24,29 @@ export function abbreviateParty(party) {
  * Svelte action: swaps a party label for its abbreviation when the full label
  * would not fit on the same line as the candidate name.
  *
- * Expects the node to contain `.cname`, `.cparty`, `.full` and `.chip`.
+ * Expects the node to contain `.cname`, `.cparty` and a `.full` label inside
+ * `.cparty`. A `.chip` swatch, if there is one, is counted as part of the
+ * party label's width.
  */
 export function shortenIfNeeded(node) {
   const update = () => {
     const name = node.querySelector('.cname')
     const party = node.querySelector('.cparty')
     const full = party?.querySelector('.full')
-    const chip = party?.querySelector('.chip')
-    if (!name || !party || !full || !chip) return
+    if (!name || !party || !full) return
 
     const gap = parseFloat(getComputedStyle(node).columnGap) || 0
-    const partyGap = parseFloat(getComputedStyle(party).columnGap) || 0
-    const needed = name.scrollWidth + gap + chip.offsetWidth + partyGap + full.offsetWidth
+    const chip = party.querySelector('.chip')
+    const chipWidth = chip
+      ? chip.offsetWidth + (parseFloat(getComputedStyle(party).columnGap) || 0)
+      : 0
 
+    // The name is clipped with an ellipsis, so its box is narrower than the
+    // text it holds: `scrollWidth` is the width the text actually wants.
+    const nameWidth = name.scrollWidth
+    const fullWidth = full.getBoundingClientRect().width
+
+    const needed = nameWidth + gap + chipWidth + fullWidth
     party.classList.toggle('is-short', needed > node.clientWidth + 1)
   }
 
@@ -78,12 +87,17 @@ export function barContrast(node) {
   update()
   const observer = new ResizeObserver(update)
   observer.observe(node)
+  // Swapping the party label for its abbreviation changes its width, which
+  // moves it along the bar, so the fill edge has to be measured again.
+  const mutations = new MutationObserver(update)
+  mutations.observe(node, { attributes: true, attributeFilter: ['class'], subtree: true })
   window.addEventListener('resize', update)
   document.fonts?.ready.then(update)
 
   return {
     destroy() {
       observer.disconnect()
+      mutations.disconnect()
       window.removeEventListener('resize', update)
     }
   }
