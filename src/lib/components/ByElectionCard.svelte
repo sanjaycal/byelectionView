@@ -15,7 +15,6 @@
     <h2>{riding.displayName}</h2>
     <div class="tags">
       <span class="badge">{riding.type}</span>
-      <span class="badge">click for details</span>
     </div>
   </div>
 
