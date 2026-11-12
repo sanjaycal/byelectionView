@@ -1,10 +1,10 @@
 # By-election live results
 
 Client-only Svelte dashboard that polls the Elections Canada results download
-(`https://enr.elections.ca/DownloadResults.aspx`) every 10 seconds and shows one
-card per by-election. Clicking a card opens a modal with the current by-election
-results on the left two thirds and the previous (2025 general election) results
-on the right third.
+(`https://enr.elections.ca/DownloadResults.aspx`) every 10 seconds by default and
+shows one card per by-election. Clicking a card opens a modal with the current
+by-election results on the left two thirds and the previous (2025 general
+election) results on the right third.
 
 Everything runs in the browser — there is no backend.
 
@@ -41,8 +41,8 @@ endpoint directly. The app requests it through a CORS proxy and falls back
 through a list of proxies until one works. The proxy that succeeded is shown in
 the header and remembered in `localStorage`.
 
-The proxy and the source URL can be changed in the **settings** panel or via
-query string:
+The proxy, the source URL and the refresh interval can be changed in the
+**settings** panel or via query string:
 
 ```
 ?proxy=jina                  # pick a proxy
@@ -52,6 +52,14 @@ query string:
 
 `public/EventResults.txt` is a copy of the download so the UI can be developed
 without hitting the network.
+
+**Refresh interval.** The settings panel has a `REFRESH EVERY` dropdown with
+10s, 15s, 30s and 60s. The choice is remembered in `localStorage` under
+`byelection.refreshTime` and the poll timer restarts immediately when it
+changes, so the countdown in the header always matches the interval in force.
+Values are clamped to the 10s-60s window and snapped to the nearest option, so
+a stale or hand-edited `localStorage` entry can never put the poll outside
+those bounds.
 
 ## Data notes
 

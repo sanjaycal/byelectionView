@@ -6,8 +6,8 @@ export const EC_RESULTS_URL = 'https://enr.elections.ca/DownloadResults.aspx'
  * `{url}` is replaced with the URL-encoded target URL.
  */
 export const PROXY_TEMPLATES = [
-  { id: 'allorigins', label: 'allorigins', template: 'https://api.allorigins.win/raw?url={url}' },
   { id: 'jina', label: 'r.jina.ai', template: 'https://r.jina.ai/{raw}' },
+  { id: 'allorigins', label: 'allorigins', template: 'https://api.allorigins.win/raw?url={url}' },
   { id: 'codetabs', label: 'codetabs', template: 'https://api.codetabs.com/v1/proxy?quest={url}' },
   { id: 'corsproxy-io', label: 'corsproxy.io', template: 'https://corsproxy.io/?url={url}' },
   { id: 'corsproxy-org', label: 'corsproxy.org', template: 'https://corsproxy.org/?{raw}' },

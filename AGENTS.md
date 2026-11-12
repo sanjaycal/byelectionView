@@ -22,7 +22,10 @@ another one.
 
 ## Data flow
 
-1. `src/App.svelte` calls `fetchResults()` in `src/lib/ec.js` every 10s.
+1. `src/App.svelte` calls `fetchResults()` in `src/lib/ec.js` on a timer. The
+   interval is 10s by default and is user-selectable (10s/15s/30s/60s) from the
+   settings panel; it is clamped to the 10-60s window and persisted in
+   `localStorage` under `byelection.refreshTime`.
 2. The Elections Canada endpoint sends no CORS headers, so the request goes
    through a CORS proxy. `PROXY_TEMPLATES` lists them; the app tries the
    selected one first and falls back through the rest until one returns a

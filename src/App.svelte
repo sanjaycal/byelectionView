@@ -5,7 +5,11 @@
   import { EC_RESULTS_URL, PROXY_TEMPLATES, fetchResults, parseResults } from './lib/ec.js'
   import { previousFor, previousCount } from './lib/previous.js'
 
-  const REFRESH_MS = 10_000
+  const REFRESH_OPTIONS = [10, 15, 30, 60]
+  const MIN_REFRESH_MS = 10_000
+  const MAX_REFRESH_MS = 60_000
+
+  let REFRESH_MS = $state(MIN_REFRESH_MS)
 
   let ridings = $state([])
   let selected = $state(null)
@@ -102,6 +106,25 @@
     timer = null
   }
 
+  // Clamp to the allowed window and snap to the nearest option so a stale or
+  // hand-edited localStorage value can never put the poll outside 10s-60s.
+  function normaliseRefreshMs(value) {
+    const ms = Number(value)
+    if (!Number.isFinite(ms)) return MIN_REFRESH_MS
+    const clamped = Math.min(MAX_REFRESH_MS, Math.max(MIN_REFRESH_MS, ms))
+    return (
+      REFRESH_OPTIONS.reduce((best, seconds) =>
+        Math.abs(seconds * 1000 - clamped) < Math.abs(best * 1000 - clamped) ? seconds : best
+      ) * 1000
+    )
+  }
+
+  function changeRefreshTime(time_ms) {
+    REFRESH_MS = normaliseRefreshMs(time_ms)
+    localStorage.setItem('byelection.refreshTime', String(REFRESH_MS))
+    startPolling()
+  }
+
   function changeProxy(id) {
     proxyId = id
     localStorage.setItem('byelection.proxy', id)
@@ -115,8 +138,10 @@
   onMount(() => {
     const savedProxy = localStorage.getItem('byelection.proxy')
     const savedSource = localStorage.getItem('byelection.source')
+    const savedRefresh = localStorage.getItem('byelection.refreshTime')
     if (savedProxy && PROXY_TEMPLATES.some((p) => p.id === savedProxy)) proxyId = savedProxy
     if (savedSource) sourceUrl = savedSource
+    if (savedRefresh) REFRESH_MS = normaliseRefreshMs(savedRefresh)
 
     const params = new URLSearchParams(window.location.search)
     if (params.get('source')) sourceUrl = params.get('source')
@@ -157,9 +182,6 @@
     {#if sourceLine}
       <span class="line dim">{sourceLine}</span>
     {/if}
-    {#if via}
-      <span class="line dim">via {via}</span>
-    {/if}
     <button class="gear" type="button" onclick={() => (showSettings = !showSettings)}>
       {showSettings ? 'close' : 'settings'}
     </button>
@@ -181,6 +203,18 @@
       <select value={proxyId} onchange={(event) => changeProxy(event.currentTarget.value)}>
         {#each PROXY_TEMPLATES as option (option.id)}
           <option value={option.id}>{option.label}</option>
+        {/each}
+      </select>
+    </label>
+    <label>
+      <span>Refresh every</span>
+      <select
+        class="refresh-select"
+        value={String(REFRESH_MS)}
+        onchange={(event) => changeRefreshTime(event.currentTarget.value)}
+      >
+        {#each REFRESH_OPTIONS as seconds (seconds)}
+          <option value={String(seconds * 1000)}>{seconds}s</option>
         {/each}
       </select>
     </label>
@@ -319,6 +353,10 @@
 
   select {
     min-width: 12rem;
+  }
+
+  .refresh-select {
+    min-width: 7rem;
   }
 
   .settings button {
