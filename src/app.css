@@ -63,13 +63,18 @@ body::before {
   white-space: nowrap;
 }
 
+/* The over copy has to be laid out exactly like the under copy, so it keeps
+   the full width of the box and is clipped at the fill edge instead. Sizing
+   it to `--visible` re-flows right-aligned text (the numbers) and lands it at
+   a different x from the copy underneath. */
 .bar-over {
   position: absolute;
   left: 0;
   top: 0;
-  width: var(--visible, 0px);
+  width: 100%;
   overflow: hidden;
   text-overflow: clip;
+  clip-path: inset(0 calc(100% - var(--visible, 0px)) 0 0);
   color: var(--on-fill);
   pointer-events: none;
 }

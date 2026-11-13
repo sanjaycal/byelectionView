@@ -101,8 +101,15 @@ To change the text colour exactly at the edge of the fill, the text is drawn
 twice:
 
 - `.bar-under` — the normal colour, in the flow, keeps the ellipsis.
-- `.bar-over` — the contrast colour, absolutely positioned on top, clipped to
-  the filled part with `width: var(--visible)`.
+- `.bar-over` — the contrast colour, absolutely positioned on top. It is the
+  full width of the box and is clipped at the fill edge with
+  `clip-path: inset(0 calc(100% - var(--visible)) 0 0)`.
+
+The over copy has to be laid out exactly like the under copy, or the two end
+up at different x positions and the row looks doubled up. That is why it is
+`width: 100%` and cut with `clip-path`, rather than sized to `--visible`:
+a narrower box re-flows the right-aligned text (the vote and percentage
+columns) so it no longer sits on top of the copy underneath.
 
 `barContrast()` in `src/lib/partyLabel.js` measures the fill edge and sets
 `--visible` on each label, so the boundary lands mid-glyph. The over copy needs
