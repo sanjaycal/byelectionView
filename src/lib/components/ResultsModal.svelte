@@ -50,9 +50,9 @@
         <div class="rows">
           <div class="head">
             <span>Candidate</span>
-            <span class="num">Votes</span>
-            <span class="num">%</span>
-            <span class="num">vs 2025</span>
+            <span class="num votes">Votes</span>
+            <span class="num pct">%</span>
+            <span class="num delta">vs 2025</span>
           </div>
           {#each riding.candidates as candidate, i (candidate.surname + candidate.party)}
             {@const delta = swing(candidate)}
@@ -119,8 +119,8 @@
           <div class="rows">
             <div class="head">
               <span>Candidate</span>
-              <span class="num">Votes</span>
-              <span class="num">%</span>
+              <span class="num votes">Votes</span>
+              <span class="num pct">%</span>
             </div>
             {#each previous.candidates as candidate, i (candidate.surname + candidate.party)}
               {@const mark = currentByParty.get(candidate.party)?.pct}
@@ -305,6 +305,13 @@
     border-bottom: 1px solid var(--line);
   }
 
+  /* The candidate cell takes the same room as the rows' `.who`, so the
+     columns line up with the text inside the bars. */
+  .head > span:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
   .num {
     text-align: right;
     white-space: nowrap;
@@ -312,12 +319,12 @@
     width: 6.5rem;
   }
 
-  .head .num:last-child,
-  .row .delta {
+  /* The "vs 2025" column is narrower than the others. */
+  .num.delta {
     width: 5.5rem;
   }
 
-  .pct {
+  .row .pct {
     color: var(--text);
   }
 
@@ -403,7 +410,7 @@
     display: inline;
   }
 
-  .delta {
+  .row .delta {
     color: var(--dim);
     font-size: 1rem;
   }

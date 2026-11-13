@@ -91,6 +91,12 @@ These cost real time; check them before assuming the CSS is broken.
   tables with `table-layout: fixed` and sized numeric columns, because a long
   candidate name used to push the votes column off the edge of the modal. They
   are flex rows now, and the numeric columns have fixed widths instead.
+- **The modal's column header has to be laid out like the rows.** The header
+  cells carry the same classes as the row cells (`num votes`, `num pct`,
+  `num delta`) and the candidate cell grows like the rows' `.who` does
+  (`flex: 1 1 auto; min-width: 0`). Without that the header sat wherever the
+  word "Candidate" happened to end, and the column titles did not line up
+  with the numbers under them.
 
 ## The bar-with-text technique
 
