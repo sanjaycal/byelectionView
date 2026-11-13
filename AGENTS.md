@@ -117,10 +117,17 @@ up at different x positions and the row looks doubled up. That is why it is
 a narrower box re-flows the right-aligned text (the vote and percentage
 columns) so it no longer sits on top of the copy underneath.
 
+It also has to be truncated the same way, so both copies use
+`text-overflow: ellipsis`. The browser makes room for the ellipsis, so a copy
+that clips instead is cut a character further along and the dark ellipsis and
+the white text land on top of each other. With the ellipsis in both copies they
+sit exactly on top of each other, and the one on the coloured part of the bar
+is the contrast colour.
+
 `barContrast()` in `src/lib/partyLabel.js` measures the fill edge and sets
-`--visible` on each label, so the boundary lands mid-glyph. The over copy needs
-`text-overflow: clip`, otherwise it draws an ellipsis at the cut point instead
-of a clean cut.
+`--visible` on each label, so the boundary lands mid-glyph. The fill edge is
+the only cut the over copy gets; the right hand edge of the box is where both
+copies put their ellipsis.
 
 The contrast colour is chosen per party by `contrastText()` in `format.js`:
 white on the red, blue and green fills, near-black on orange, where white is
