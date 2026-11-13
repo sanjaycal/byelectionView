@@ -113,6 +113,26 @@ The contrast colour is chosen per party by `contrastText()` in `format.js`:
 white on the red, blue and green fills, near-black on orange, where white is
 unreadable. That means the split is invisible on orange rows.
 
+## The 2025 marker triangles
+
+The pair of triangles that mark where a party stood in the 2025 election uses
+the same split as the text. Each triangle is a `.tri` element with `data-on-bar`,
+so `barContrast()` measures the fill edge for it the same way it does for the
+labels, and sets `--visible` on it.
+
+The triangle is not drawn twice. It is one element with a background gradient
+that runs `--on-fill` up to `--visible` and `--text` after it, so the colour
+changes exactly at the fill edge. The shape comes from `clip-path`, not the
+border trick the old `::before`/`::after` markers used.
+
+`.marker` and `.tri` are global in `app.css`, because both the card and the
+modal render them and scoped styles would not reach across.
+
+`barContrast()` also watches the row's `style` attribute. New results change
+`--pct`, which moves the fill edge without changing the size of the row, so
+neither the `ResizeObserver` nor the class `MutationObserver` fires. Without
+that watcher the split goes stale after the first poll.
+
 ## Party abbreviations
 
 The party label is shortened per row when the full one will not fit next to the

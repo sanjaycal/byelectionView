@@ -91,6 +91,10 @@ export function barContrast(node) {
   // moves it along the bar, so the fill edge has to be measured again.
   const mutations = new MutationObserver(update)
   mutations.observe(node, { attributes: true, attributeFilter: ['class'], subtree: true })
+  // New results change `--pct` on the row, which moves the fill edge without
+  // changing the size of the row, so the split has to be measured again.
+  const restyle = new MutationObserver(update)
+  restyle.observe(node, { attributes: true, attributeFilter: ['style'] })
   window.addEventListener('resize', update)
   document.fonts?.ready.then(update)
 
@@ -98,6 +102,7 @@ export function barContrast(node) {
     destroy() {
       observer.disconnect()
       mutations.disconnect()
+      restyle.disconnect()
       window.removeEventListener('resize', update)
     }
   }

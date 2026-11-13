@@ -73,7 +73,10 @@
             class="marker"
             style="left:{mark}%"
             title="2025 general election: {formatPct(mark)}"
-          ></span>
+          >
+            <span class="tri tri-top" data-on-bar></span>
+            <span class="tri tri-bottom" data-on-bar></span>
+          </span>
         {/if}
       </li>
     {/each}
@@ -284,36 +287,6 @@
   }
 
 
-
-  .marker {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 0;
-    z-index: 1;
-  }
-
-  .marker::before,
-  .marker::after {
-    content: '';
-    position: absolute;
-    left: -5px;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    opacity: 0.85;
-  }
-
-  .marker::before {
-    top: 0;
-    border-top: 6px solid var(--text);
-  }
-
-  .marker::after {
-    bottom: 0;
-    border-bottom: 6px solid var(--text);
-  }
 
   .candidates li.more {
     display: block;

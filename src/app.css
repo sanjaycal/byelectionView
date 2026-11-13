@@ -74,6 +74,42 @@ body::before {
   pointer-events: none;
 }
 
+/* The 2025 marker: a pair of triangles pointing at the bar from the top and
+   the bottom, showing where the party stood in the last general election.
+   Each triangle is split at the fill edge the same way the text is, so the
+   part over the coloured part of the bar takes the contrast colour and the
+   rest keeps the text colour. */
+.marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  z-index: 1;
+}
+
+.tri {
+  position: absolute;
+  left: -5px;
+  width: 10px;
+  height: 6px;
+  opacity: 0.85;
+  background: linear-gradient(
+    to right,
+    var(--on-fill) 0 var(--visible, 0px),
+    var(--text) var(--visible, 0px) 100%
+  );
+}
+
+.tri-top {
+  top: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.tri-bottom {
+  bottom: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
 ::selection {
   background: var(--accent);
   color: #ffffff;

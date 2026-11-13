@@ -28,7 +28,8 @@ candidate's share in the party's colour and the candidate's name sits inside
 it, changing colour exactly at the edge of the fill. The party label sits next
 to the name and is abbreviated when the full one will not fit. A pair of
 triangles marks where that party stood in the 2025 general election, so a swing
-is visible at a glance.
+is visible at a glance. The triangles change colour at the edge of the fill
+too, so they stay readable wherever they land.
 
 **Modal.** Current by-election results on the left, 2025 general election
 results on the right. The previous column mirrors the current one, with the
